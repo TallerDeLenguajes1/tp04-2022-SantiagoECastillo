@@ -10,25 +10,29 @@ typedef struct {
 }Tarea;
 
 void cargarTareas(Tarea **tareas, int cantidad);
-void mostrarTareas(Tarea **tareas, int cantidad);
-
+int categorizarTareas(Tarea **tareas, Tarea **realizada, int cantidad);
+void mostrarTareas();
+void mostrarTareasRealizadas(Tarea **realizada);
 
 int main(){
-    Tarea **tareas;
-    int cantidadTareas;
+    Tarea **tareas, **tareasRealizadas;
+    int cantidadTareas, cantTareasRealizadas;
     srand(time(NULL));
 
     printf("Ingrese la cantidad de tareas a realizar: ");
     scanf("%d", &cantidadTareas);
     fflush(stdin);
 
-    tareas = (Tarea **)malloc(sizeof(Tarea) * cantidadTareas);
-    
+    tareas = (Tarea **)malloc(sizeof(Tarea) * cantidadTareas); //Arreglo qu contiene todas las tareas, se genera un arreglo de doble puntero
+    tareasRealizadas = (Tarea **)malloc(sizeof(Tarea) * cantidadTareas); //Arreglo que contiene las tareas realizadas
+
     cargarTareas(tareas, cantidadTareas);
-    mostrarTareas(tareas, cantidadTareas);
+    cantTareasRealizadas = categorizarTareas(tareas ,tareasRealizadas, cantidadTareas);
+
+    mostrarTareasRealizadas(tareasRealizadas);
 
     free(tareas);
-    
+    free(tareasRealizadas);
     return 0;
 }
 
@@ -54,20 +58,45 @@ void cargarTareas(Tarea **tareas, int cantidad){
     free(buffer);
 }
 
-void mostrarTareas(Tarea **tareas, int cantidad){
-    printf("---------Tarear a realizar---------\n\n");
+int categorizarTareas(Tarea **tareas, Tarea **realizada, int cantidad){
+    char confirmacion;
+    int contador = 0;
+
+    printf("\n\n---------TAREAS---------\n");
     
     for(int j=0; j<cantidad; j++){
         printf("ID: %d \n",  tareas[j]->TareaID);
         printf("Descripcion: %s \n", tareas[j]->Descripcion);
-        printf("Duracin: %d \n", tareas[j]->Duracion);
-        free(tareas[j]->Descripcion);
+        printf("Duracion: %d \n", tareas[j]->Duracion);
+
+        printf("Se realizo la tarea? (S/N): ");
+        scanf("%c", &confirmacion);
+        fflush(stdin);
+
+        if(confirmacion == 's'){
+            realizada[contador] = tareas[j];
+            contador++;
+            printf("LA TAREA SE REALIZO\n");
+        }else{
+            printf("La tarea esta PENDIENTE\n");
+        }
+    }
+    return contador;
+}
 
 
+void mostrarTareasRealizadas(Tarea **realizada);
+
+    for(int j=0; j<cantidad; j++){
+        printf("\n--------TAREAS REALIZADAS -----------\n");
+        printf("ID: %d \n",  realizada[j]->TareaID);
+        printf("Descripcion: %s \n", realizada[j]->Descripcion);
+        printf("Duracion: %d \n", realizada[j]->Duracion);
     }
 
     for(int j=0; j<cantidad; j++){
         free(tareas[j]);
+        free(realizada[j]);
     }
     
 }
