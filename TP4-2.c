@@ -11,8 +11,8 @@ typedef struct {
 
 void cargarTareas(Tarea **tareas, int cantidad);
 int categorizarTareas(Tarea **tareas, Tarea **realizada, int cantidad);
-void mostrarTareas();
-void mostrarTareasRealizadas(Tarea **realizada);
+void mostrarTareasRealizadas(Tarea **realizada, int cantidad);
+void mostrarTareasPendientes(Tarea **tareas, int cantidad);
 
 int main(){
     Tarea **tareas, **tareasRealizadas;
@@ -29,7 +29,8 @@ int main(){
     cargarTareas(tareas, cantidadTareas);
     cantTareasRealizadas = categorizarTareas(tareas ,tareasRealizadas, cantidadTareas);
 
-    mostrarTareasRealizadas(tareasRealizadas);
+    mostrarTareasRealizadas(tareasRealizadas, cantTareasRealizadas);
+    mostrarTareasPendientes(tareas, cantidadTareas);
 
     free(tareas);
     free(tareasRealizadas);
@@ -75,6 +76,7 @@ int categorizarTareas(Tarea **tareas, Tarea **realizada, int cantidad){
 
         if(confirmacion == 's'){
             realizada[contador] = tareas[j];
+            tareas[j] = NULL;
             contador++;
             printf("LA TAREA SE REALIZO\n");
         }else{
@@ -85,18 +87,22 @@ int categorizarTareas(Tarea **tareas, Tarea **realizada, int cantidad){
 }
 
 
-void mostrarTareasRealizadas(Tarea **realizada);
-
-    for(int j=0; j<cantidad; j++){
-        printf("\n--------TAREAS REALIZADAS -----------\n");
-        printf("ID: %d \n",  realizada[j]->TareaID);
-        printf("Descripcion: %s \n", realizada[j]->Descripcion);
-        printf("Duracion: %d \n", realizada[j]->Duracion);
+void mostrarTareasRealizadas(Tarea **realizada, int cantidad){
+    printf("\n---------TAREAS REALIZADAS----------\n");
+    for(int i=0; i<cantidad; i++){
+        printf("ID: %d \n", realizada[i]->TareaID);
+        printf("Descripcion: %s \n", realizada[i]->Descripcion);
+        printf("Duracion: %d \n", realizada[i]->Duracion);
     }
+}
 
-    for(int j=0; j<cantidad; j++){
-        free(tareas[j]);
-        free(realizada[j]);
+void mostrarTareasPendientes(Tarea **tareas, int cantidad){
+    printf("\n---------TAREAS PENDIENTES----------\n");
+    for(int i=0; i<cantidad; i++){
+        if(tareas[i] != NULL){
+            printf("ID: %d \n",  tareas[i]->TareaID);
+            printf("Descripcion: %s \n", tareas[i]->Descripcion);
+            printf("Duracion: %d \n", tareas[i]->Duracion); 
+        }
     }
-    
 }
